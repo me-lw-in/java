@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yo its me</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mobile Detection */
+        .mobile-warning {
+            display: none;
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 767px) {
+            .mobile-warning {
+                display: block !important;
+            }
+
+            .desktop-content {
+                display: none !important;
+            }
+        }
+
+        /* Phase 1 - Dark Theme */
+        body.phase1 {
+            background: #0f0f0f;
+            background-image: radial-gradient(circle at 20% 50%, rgba(139, 0, 139, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(220, 20, 60, 0.15), transparent 50%);
+            transition: all 1.5s ease;
+        }
+
+        .password-screen {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a, #000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .password-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            padding: 50px 60px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .password-box h2 {
+            margin-bottom: 25px;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* INPUT STYLE */
+        .password-box input {
+            width: 260px;
+            padding: 14px 20px;
+            border-radius: 40px;
+            border: 2px solid transparent;
+            outline: none;
+            font-size: 16px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .password-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .password-box input:focus {
+            border-color: hotpink;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+            transform: scale(1.03);
+        }
+
+        /* BUTTON STYLE */
+        .password-box button {
+            margin-top: 20px;
+            padding: 12px 35px;
+            border-radius: 40px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b9d, #ff1744);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .password-box button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+        }
+
+        .password-box button:active {
+            transform: scale(0.95);
+        }
+
+        #errorText {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #ff4d4d;
+        }
+
+
+        /* Phase 2 - Romantic Theme */
+        body.phase2 {
+            background: linear-gradient(135deg, #ffeef8 0%, #ffc9e8 50%, #ffb3d9 100%);
+            transition: all 1.5s ease;
+        }
+
+        .desktop-content {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            max-width: 1400px;
+            gap: 60px;
+            padding: 40px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Left Side - Avatar */
+        .avatar-container {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            50% {
+                transform: translateX(8px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .avatar-wrapper.bounce {
+            animation: float 3s ease-in-out infinite, bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            25% {
+                transform: scale(1.05) translateY(-10px);
+            }
+
+            50% {
+                transform: scale(0.95) translateY(5px);
+            }
+
+            75% {
+                transform: scale(1.02) translateY(-5px);
+            }
+        }
+
+        .avatar-wrapper.typing-scale {
+            animation: float 3s ease-in-out infinite, typingPulse 1.5s ease-in-out;
+        }
+
+        @keyframes typingPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        .avatar-wrapper.plead {
+            animation: float 3s ease-in-out infinite, pleading 1s ease-in-out infinite;
+        }
+
+        @keyframes pleading {
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            50% {
+                transform: scale(0.97) translateY(5px);
+            }
+        }
+
+        .avatar-wrapper.happy {
+            animation: happyBounce 0.8s ease-in-out infinite;
+        }
+
+        @keyframes happyBounce {
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            50% {
+                transform: scale(1.08) translateY(-15px);
+            }
+        }
+
+        body.phase2 .avatar-wrapper.happy {
+            filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.6));
+        }
+
+        .avatar-img {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transition: opacity 0.3s ease;
+        }
+
+        body.phase2 .avatar-img {
+            border-color: rgba(255, 182, 193, 0.8);
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.4);
+        }
+
+        /* Right Side - Messages */
+        .message-container {
+            flex: 1 1 auto;
+            /* take remaining space */
+            align-items: center;
+            /* align text toward avatar */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            /* border: 1px solid rgba(255, 255, 255, 0.1); */
+            border-radius: 20px;
+            padding: 40px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            text-align: center;
+        }
+
+        body.phase2 .message-box {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 192, 203, 0.5);
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
+        }
+
+        .message-text {
+            font-size: 28px;
+            color: #fff;
+            text-align: center;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+            font-weight: 300;
+        }
+
+        body.phase2 .message-text {
+            color: #d63384;
+            font-weight: 400;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #fff;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        body.phase2 .cursor {
+            background-color: #d63384;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff1744 100%);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 23, 68, 0.5);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #666 0%, #333 100%);
+            color: white;
+
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+        }
+
+        /* Floating Hearts */
+        .heart {
+            position: fixed;
+            font-size: 30px;
+            animation: floatHeart 4s ease-in infinite;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleAnim 2s ease-in-out infinite;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes sparkleAnim {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        body.phase2 .sparkle {
+            background: #ff69b4;
+        }
+
+        /* Blur transition effect */
+        .blur-transition {
+            animation: blurEffect 1.5s ease;
+        }
+
+        @keyframes blurEffect {
+
+            0%,
+            100% {
+                filter: blur(0px);
+            }
+
+            50% {
+                filter: blur(5px);
+            }
+        }
+    </style>
+</head>
+
+<body class="phase1">
+
+    <!-- PASSWORD SCREEN -->
+    <div id="passwordScreen" class="password-screen">
+        <div class="password-box">
+            <h2>Enter Secret Password 💌</h2>
+            <input type="password" id="passwordInput" placeholder="Type here...">
+            <button onclick="checkPassword()">Unlock</button>
+            <p id="errorText"></p>
+        </div>
+    </div>
+
+
+    <!-- Mobile Warning -->
+    <div class="mobile-warning">
+        Petya laptop ar open ker 😒😒 mobile ar zaina
+    </div>
+
+    <!-- Desktop Content -->
+    <div class="desktop-content">
+        <!-- Left Side - Avatar -->
+        <div class="avatar-container">
+            <div class="avatar-wrapper" id="avatarWrapper">
+                <img src="avatar-hi.png" alt="Avatar" class="avatar-img" id="avatarImg">
+            </div>
+        </div>
+
+        <!-- Right Side - Messages -->
+        <div class="message-container">
+            <div class="message-box">
+                <div class="message-text" id="messageText"></div>
+            </div>
+            <div class="buttons-container" id="buttonsContainer" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordInput = document.getElementById("passwordInput");
+
+            passwordInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    checkPassword();
+                }
+            });
+        });
+
+
+        function checkPassword() {
+            const correctPassword = "imbot"; // 🔐 CHANGE THIS
+            const input = document.getElementById("passwordInput").value;
+            const errorText = document.getElementById("errorText");
+            document.querySelector(".password-box").classList.add("shake");
+
+            setTimeout(() => {
+                document.querySelector(".password-box").classList.remove("shake");
+            }, 400);
+
+
+            if (input === correctPassword) {
+                // Hide password screen
+                document.getElementById("passwordScreen").style.display = "none";
+
+                // Show main content
+                document.querySelector(".desktop-content").style.display = "flex";
+
+                // Now run your normal sequence
+                setTimeout(() => {
+                    showNextMessage();
+                }, 500);
+
+            } else {
+                errorText.textContent = "Bitch soma mail pole, tantu alle password gal!😒";
+            }
+        }
+
+
+        // Typewriter effect
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            element.innerHTML = '';
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            element.appendChild(cursor);
+
+            function type() {
+                if (i < text.length) {
+                    element.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    cursor.remove();
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        // Avatar animations
+        function setAvatarAnimation(animClass) {
+            const avatar = document.getElementById('avatarWrapper');
+            avatar.className = 'avatar-wrapper ' + animClass;
+        }
+
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Create sparkles
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.animationDelay = Math.random() + 's';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 2000);
+        }
+
+        // Move "No" button randomly
+        function moveNoButton(button) {
+            const container = document.querySelector('.buttons-container');
+            const containerRect = container.getBoundingClientRect();
+
+            const maxX = containerRect.width - button.offsetWidth;
+            const maxY = 150; // allow some vertical play
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            button.style.position = "relative";
+            button.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Message sequence
+        const messages = [
+            {
+                text: "Hello bott u bitchhhhhhhhhhh!!😁😁😁",
+                delay: 1500,
+                animation: 'bounce',
+                avatar: 'avatar-hi.png'
+            },
+            {
+                text: "Happy Valentines dayyyyy uu !(ugly) garll, and i !(hate you so muchhhhhhhhh)😚🤭💞♥️. And i'll ask you only one question and please be careful with your answer!😒",
+                delay: 2000,
+                animation: 'typing-scale',
+                avatar: 'avatar-playful.png'
+            },
+            {
+                text: "Will u be my valentineeeee 🥺🥺?? Pleej",
+                delay: 0,
+                animation: 'plead',
+                showButtons: true,
+                avatar: 'avatar-plead.png'
+            }
+        ];
+
+        let currentMessage = 0;
+
+        function showNextMessage() {
+            if (currentMessage >= messages.length) return;
+
+            const msg = messages[currentMessage];
+            const messageText = document.getElementById('messageText');
+            setAvatarAnimation(msg.animation);
+            document.getElementById('avatarImg').src = msg.avatar;
+
+            typeWriter(messageText, msg.text, 50, () => {
+                if (msg.showButtons) {
+                    showButtons();
+                } else {
+                    setTimeout(() => {
+                        currentMessage++;
+                        showNextMessage();
+                    }, msg.delay);
+                }
+            });
+        }
+
+        function showButtons() {
+            const buttonsContainer = document.getElementById('buttonsContainer');
+            buttonsContainer.style.display = 'flex';
+            buttonsContainer.style.position = 'relative';
+
+            const yesBtn = document.createElement('button');
+            yesBtn.className = 'btn btn-yes';
+            yesBtn.textContent = 'Yesss my babyyyyyy☺️';
+            yesBtn.onclick = switchToPhase2;
+
+            const noBtn = document.createElement('button');
+            noBtn.className = 'btn btn-no';
+            noBtn.textContent = 'No 😡';
+            // noBtn.style.position = 'absolute';
+            // noBtn.style.left = '200px';
+            // noBtn.style.top = '0';
+
+            noBtn.addEventListener('mouseenter', function () {
+                moveNoButton(noBtn);
+            });
+
+            buttonsContainer.appendChild(yesBtn);
+            buttonsContainer.appendChild(noBtn);
+        }
+
+        function switchToPhase2() {
+            // Add blur transition
+            document.querySelector('.desktop-content').classList.add('blur-transition');
+
+            setTimeout(() => {
+                // Hide buttons
+                document.getElementById('buttonsContainer').style.display = 'none';
+
+                // Change theme
+                document.body.className = 'phase2';
+
+                // Change avatar animation
+                setAvatarAnimation('happy');
+                document.getElementById('avatarImg').src = 'avatar-happy.png';
+
+                // Show thank you message
+                const messageText = document.getElementById('messageText');
+                typeWriter(messageText, 'Thankk uuuuuuuuuuuuuuuuuuu 😘🥰 my mumkin pumkin elellelele!!! ummma😘😘', 50);
+
+                // Play music
+                const music = document.getElementById('bgMusic');
+                music.play().catch(e => console.log('Music autoplay prevented:', e));
+
+                // Start heart animation
+                setInterval(createHeart, 400);
+
+                // Start sparkles
+                setInterval(createSparkle, 200);
+            }, 750);
+        }
+
+
+    </script>
+</body>
+
+</html>
