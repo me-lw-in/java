@@ -538,6 +538,20 @@
     </audio>
 
     <script>
+
+        // PRELOAD AVATAR IMAGES
+        const avatarImages = [
+            "avatar-hi.png",
+            "avatar-playful.png",
+            "avatar-plead.png",
+            "avatar-happy.png"
+        ];
+
+        avatarImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
             const passwordInput = document.getElementById("passwordInput");
 
@@ -680,7 +694,14 @@
             const msg = messages[currentMessage];
             const messageText = document.getElementById('messageText');
             setAvatarAnimation(msg.animation);
-            document.getElementById('avatarImg').src = msg.avatar;
+            const avatar = document.getElementById('avatarImg');
+            avatar.style.opacity = 0;
+
+            setTimeout(() => {
+                avatar.src = msg.avatar;
+                avatar.style.opacity = 1;
+            }, 150);
+
 
             typeWriter(messageText, msg.text, 50, () => {
                 if (msg.showButtons) {
